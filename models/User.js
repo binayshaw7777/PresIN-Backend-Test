@@ -34,24 +34,25 @@ const userSchema = new mongoose.Schema({
   },
 });
 
-const joiUserSchema = Joi.object({
-  name: Joi.string().required(),
-  email: Joi.string().email().required(),
-  password: Joi.string().min(8).required(),
-  isAdmin: Joi.boolean().default(false),
-  role: Joi.string().required(),
-  createdAt: Joi.date().default(Date.now()),
-  embeddingsData: Joi.string().required(),
-});
+// const joiUserSchema = Joi.object({
+//   name: Joi.string().required(),
+//   email: Joi.string().email().required(),
+//   password: Joi.string().min(8).required(),
+//   isAdmin: Joi.boolean().default(false),
+//   role: Joi.string().required(),
+//   createdAt: Joi.date().default(Date.now()),
+//   embeddingsData: Joi.string().required(),
+// });
 
 // Define a validate function to validate user data using Joi schema
-function validateUser(user) {
-    return joiUserSchema.validate(user);
-}
+// function validateUser(user) {
+//     return joiUserSchema.validate(user);
+// }
 
 const User = mongoose.model('User', userSchema);
+module.exports = User;
 
-module.exports = {
-    User,
-    validateUser
-};
+// module.exports = {
+//     User,
+//     validateUser
+// };
