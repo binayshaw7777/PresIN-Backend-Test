@@ -15,14 +15,14 @@ const sendEmail = async (email, subject, text) => {
             host: "smtp.gmail.com",
             service: "Gmail",
             port: 587,
-            secure: false,
+            secure: true,
             auth: {
-                user: "binayshaw7777@gmail.com",
-                pass: "oxinaqhigkpawdac",
+                user: process.env.USER,
+                pass: process.env.PASS,
             },
         });
         await transporter.sendMail({
-            from: "binayshaw7777@gmail.com",
+            from: process.env.USER,
             to: email,
             subject: subject,
             text: text,
