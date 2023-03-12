@@ -14,20 +14,22 @@ const organizationSchema = new mongoose.Schema({
   },
 });
 
-const joiAttendanceSchema = Joi.object({
-  organizationName: Joi.string().required(),
-  organizationLocation: Joi.string().required(),
-  organizationEmail: Joi.string(),
-});
+// const joiAttendanceSchema = Joi.object({
+//   organizationName: Joi.string().required(),
+//   organizationLocation: Joi.string().required(),
+//   organizationEmail: Joi.string(),
+// });
   
-  // Define a validate function to validate organization data using Joi schema
-  function validateOrganization(organization) {
-    return joiAttendanceSchema.validate(organization);
-  }
+//   // Define a validate function to validate organization data using Joi schema
+//   function validateOrganization(organization) {
+//     return joiAttendanceSchema.validate(organization);
+//   }
   
-  const Organization = mongoose.model("Organization", organizationSchema);
+const Organization = mongoose.model("Organization", organizationSchema);
+
+module.exports = Organization;
   
-  module.exports = {
-    Organization,
-    validateOrganization
-  };
+// module.exports = {
+//   Organization,
+//   validateOrganization
+// };

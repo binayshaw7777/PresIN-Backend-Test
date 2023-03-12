@@ -34,24 +34,26 @@ const attendanceSchema = new mongoose.Schema({
 });
 
 
-const joiAttendanceSchema = Joi.object({
-  userID: Joi.string().required(),
-  markedTime: Joi.number().required(),
-  markedDate: Joi.number().required(),
-  markedMonth: Joi.number().required(),
-  markedYear: Joi.number().required(),
-  organization: Joi.string().required(),
-  location: Joi.string().required(),
-});
+// const joiAttendanceSchema = Joi.object({
+//   userID: Joi.string().required(),
+//   markedTime: Joi.number().required(),
+//   markedDate: Joi.number().required(),
+//   markedMonth: Joi.number().required(),
+//   markedYear: Joi.number().required(),
+//   organization: Joi.string().required(),
+//   location: Joi.string().required(),
+// });
 
-// Define a validate function to validate attendance data using Joi schema
-function validateAttendance(attendance) {
-  return joiAttendanceSchema.validate(attendance);
-}
+// // Define a validate function to validate attendance data using Joi schema
+// function validateAttendance(attendance) {
+//   return joiAttendanceSchema.validate(attendance);
+// }
 
 const Attendance = mongoose.model("Attendance", attendanceSchema);
 
-module.exports = {
-  Attendance,
-  validateAttendance
-};
+module.exports = Attendance;
+
+// module.exports = {
+//   Attendance,
+//   validateAttendance
+// };
