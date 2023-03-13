@@ -1,12 +1,16 @@
 const mongoose = require("mongoose");
-const Joi = require("@hapi/joi");
+
 
 const attendanceSchema = new mongoose.Schema({
   userID: {
     type: String,
     required: true
   },
-  markedTime: {
+  markedMinute: {
+    type: Number,
+    required: true
+  },
+  markedHour: {
     //This will be in 24 hour format
     type: Number,
     required: true

@@ -4,6 +4,7 @@ const connectDB = require('./config/db');
 const app = express();
 const PORT = process.env.PORT || 3000;
 const userRoutes = require('./routes/userRoutes.js');
+const attendanceRoutes = require('./routes/attendanceRoutes.js');
 
 app.get('/', (req, res) => {
     res.send("Homepage");
@@ -12,6 +13,7 @@ app.get('/', (req, res) => {
 app.use(express.json());
 
 app.use('/api/users', userRoutes);
+app.use('/api/attendance', attendanceRoutes);
 
 const start = async () => {
     try {
