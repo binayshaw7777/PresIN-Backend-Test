@@ -8,7 +8,11 @@ router.post('/register', userController.userRegistration)
 router.post("/login", userController.userLogin);
 router.post("/reset-password", userController.resetPassword);
 router.post("/reset-password/:userId/:token", userController.resetPasswordFromLink);
+router.get('/all', userController.getAllUsers)
+
 //Private Route
+router.post("/delete/:id", userController.deleteUser);
+router.get("/:id", userController.getUserById);
 
 
 module.exports = router

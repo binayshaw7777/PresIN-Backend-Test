@@ -14,6 +14,22 @@ const BCRYPT_SALT = 10
 
 
 class UserController {
+
+
+    static getAllUsers = async (req, res) => {
+        try {
+            const listOfAllUsers = await User.find({});
+            if (!listOfAllUsers || listOfAllUsers.length == 0) {
+                return res.send({status: STATUS_FAILED, message: "No users found!"});
+            }
+            res.send({status: STATUS_SUCCESS, message: "All users fetched successfully!", data: listOfAllUsers});
+        } catch (error) {
+            console.log(error);
+            res.status(400).send({ status: STATUS_FAILED, message: `Something went wrong! ${error}`});
+        }
+    }
+
+
     static userRegistration = async (req, res) => {
         const {name, email, password, isAdmin, role, createdAt, embeddingsData} = req.body;
 
@@ -60,7 +76,7 @@ class UserController {
 
           const user = await User.findOne({ email: email });
           if (!user) {
-            return res.send({status: STATUS_FAILED, message: "You're not a registered user!"});
+            return res.status(404).send({status: STATUS_FAILED, message: "You're not a registered user!"});
           }
 
           const isMatch = await bcrypt.compare(password, user.password);
@@ -73,9 +89,43 @@ class UserController {
             
         } catch (error) {
             console.log(error);
-            return res.send({"status": STATUS_FAILED, message: "Unable to login!"});
+            res.status(400).send({"status": STATUS_FAILED, message: "Unable to login!"});
         }
     }
+
+
+    static deleteUser = async (req, res) => {
+      try {
+        const userExists = await User.findById(req.params.id);
+        if (!userExists) {
+          return res.status(404).send({ status: STATUS_FAILED, message: "User not found!"});
+        }
+
+        await userExists.deleteOne();
+        res.send({ status: STATUS_SUCCESS, message: "User deleted successfully!" })
+      } catch (error) {
+        console.log(error);
+        res.status(400).send({ status: STATUS_FAILED, message: error });
+      }
+    }
+
+
+    static getUserById = async (req, res) => {
+      try {
+        const user = await User.findById(req.params.id);
+        if (!user) {
+          return res.status(404).send({ status: STATUS_FAILED, message: "User not found!"});
+        }
+        res.send({ status: STATUS_SUCCESS, message: "User found successfully!", user: user });
+      } catch (error) {
+        console.log(error);
+        if (error.name === 'CastError') {
+          return res.status(400).send({ status: STATUS_FAILED, message: `Invalid ${error.path}: ${error.value}` });
+        }
+        res.status(500).send({ status: STATUS_FAILED, message: "Something went wrong!" });
+      }
+    }
+
 
 
     static resetPassword = async (req, res) => {
@@ -101,12 +151,13 @@ class UserController {
 
           const link = `http://localhost:${process.env.PORT}/reset-password/${user._id}/${token.token}`;
           const emailMessage = generatePasswordResetEmail(user.name, link);
-          await sendEmail(user.email, "Password reset", emailMessage);
 
-          return res.send({ status: STATUS_SUCCESS, message: "Email sent successfully!"})
+          await sendEmail(user.email, "Password reset", emailMessage);
+          res.send({ status: STATUS_SUCCESS, message: "Email sent successfully!"})
+
       } catch (error) {
         console.log(error);
-        return res.status(400).send({ status: STATUS_FAILED, message: error });
+        res.status(400).send({ status: STATUS_FAILED, message: error });
       }
     }
     
@@ -123,19 +174,22 @@ class UserController {
           return res.status(400).send({ status: STATUS_FAILED, message: "Invalid link or expired link!"})
         }
 
-
         const salt = await bcrypt.genSalt(BCRYPT_SALT)
         const hashedPassword = await bcrypt.hash(req.body.password, salt)
         user.password = hashedPassword;
+
         await user.save();
         await token.deleteOne();
-
         res.send({ status: STATUS_SUCCESS, message: "Password changed successfully!" })
+
       } catch (error) {
         console.log(error);
-        return res.status(400).send({ status: STATUS_FAILED, message: error });
+        res.status(400).send({ status: STATUS_FAILED, message: error });
       }
     }
+
+
+  
 };
 
 function generatePasswordResetEmail(name, resetLink) {

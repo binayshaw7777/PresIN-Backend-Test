@@ -12,7 +12,7 @@ class organizationController {
                 return res.send({status: STATUS_FAILED, message: "No organizations found!"});
             }
 
-            return res.send({status: STATUS_SUCCESS, message: "All organizations fetched successfully!", data: listOfAllOrganizations});
+            res.send({status: STATUS_SUCCESS, message: "All organizations fetched successfully!", data: listOfAllOrganizations});
 
         } catch (error) {
             console.log(error);
@@ -41,8 +41,9 @@ class organizationController {
             const organization = new Organization({
                 organizationName, organizationLocation, organizationEmail
             });
+
             await organization.save();
-            return res.send({status: STATUS_SUCCESS, message: "Organization added successfully!"});
+            res.send({status: STATUS_SUCCESS, message: "Organization added successfully!"});
 
         } catch (error) {
             console.log(error);
@@ -57,14 +58,14 @@ class organizationController {
             if (!organizationIsPresent) {
                 return res.status(404).send({status: STATUS_FAILED, message: "Organization not found!"});
             }
-            return res.send({status: STATUS_SUCCESS, message: "Organization fetched successfully!", data: organizationIsPresent});
+            res.send({status: STATUS_SUCCESS, message: "Organization fetched successfully!", data: organizationIsPresent});
 
         } catch (error) {
             console.error(error);
             if (error.name === 'CastError') {
               return res.status(400).send({ status: STATUS_FAILED, message: `Invalid ${error.path}: ${error.value}` });
             }
-            return res.status(500).send({ status: STATUS_FAILED, message: "Something went wrong!" });
+            res.status(500).send({ status: STATUS_FAILED, message: "Something went wrong!" });
           }
     }
 
