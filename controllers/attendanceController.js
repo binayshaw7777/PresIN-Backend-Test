@@ -1,4 +1,5 @@
 const Attendance = require("../models/Attendance.js");
+const mongoose = require("mongoose");
 
 const STATUS_SUCCESS = "success";
 const STATUS_FAILED = "failed";
@@ -58,6 +59,24 @@ class attendanceController {
             console.log(error);
             res.status(400).send({ status: STATUS_FAILED, message: `Something went wrong! ${error}`});
         }
+    }
+
+
+    static getAttendanceById = async (req, res) => {
+        try {
+            const attendanceIsPresent = await Attendance.findById(req.params.id);
+            if (!attendanceIsPresent) {
+                return res.status(404).send({status: STATUS_FAILED, message: "Attendance not found!"});
+            }
+            return res.send({status: STATUS_SUCCESS, message: "Attendance fetched successfully!", data: attendanceIsPresent});
+
+        } catch (error) {
+            console.error(error);
+            if (error.name === 'CastError') {
+              return res.status(400).send({ status: STATUS_FAILED, message: `Invalid ${error.path}: ${error.value}` });
+            }
+            return res.status(500).send({ status: STATUS_FAILED, message: "Something went wrong!" });
+          }
     }
 
 }
