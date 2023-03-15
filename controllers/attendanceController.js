@@ -27,10 +27,10 @@ class attendanceController {
             const listOfAllAttendees = await Attendance.find(filter).sort(sort);
             if (!listOfAllAttendees || listOfAllAttendees.length == 0) return res.send({status: STATUS_FAILED, message: "No attendees found!"});
             
-            res.status(200).send({attendanceList: listOfAllAttendees});
+            res.status(200).send({ status_code: 200, status: STATUS_SUCCESS, message: "All attendees fetched successfully!", attendanceList: listOfAllAttendees});
         } catch (error) {
             console.log(error);
-            res.status(400).send(error);
+            res.status(400).send({ status_code: 400, status: STATUS_FAILED, message: `Something went wrong! ${error}`});
         }
     }
 
@@ -50,13 +50,13 @@ class attendanceController {
               );
             
               if (existingAttendance) {
-                return res.status(400).send({ message: 'Attendance already marked for this date!' });
+                return res.status(400).send({ status_code: 400, status: STATUS_FAILED, message: 'Attendance already marked for this date!' });
               }
             
-              res.status(200).send({ message: 'Attendance marked successfully!' });
+              res.status(200).send({ status_code: 200, status: STATUS_SUCCESS, message: 'Attendance marked successfully!' });
         } catch (error) {
             console.log(error);
-            res.status(400).send({ status: STATUS_FAILED, message: `Something went wrong! ${error}`});
+            res.status(400).send({ status_code: 400, status: STATUS_FAILED, message: `Something went wrong! ${error}`});
         }
     }
 
@@ -67,14 +67,14 @@ class attendanceController {
             if (!attendanceIsPresent) {
                 return res.status(404).send({status: STATUS_FAILED, message: "Attendance not found!"});
             }
-            res.send({status: STATUS_SUCCESS, message: "Attendance fetched successfully!", data: attendanceIsPresent});
+            res.status(200).send({ status_code: 200, status: STATUS_SUCCESS, message: "Attendance fetched successfully!", data: attendanceIsPresent});
 
         } catch (error) {
             console.error(error);
             if (error.name === 'CastError') {
-              return res.status(400).send({ status: STATUS_FAILED, message: `Invalid ${error.path}: ${error.value}` });
+              return res.status(400).send({ status_code: 400, status: STATUS_FAILED, message: `Invalid ${error.path}: ${error.value}` });
             }
-            res.status(500).send({ status: STATUS_FAILED, message: "Something went wrong!" });
+            res.status(500).send({ status_code: 500, status: STATUS_FAILED, message: "Something went wrong!" });
           }
     }
 

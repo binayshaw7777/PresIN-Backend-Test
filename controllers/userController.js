@@ -22,10 +22,10 @@ class UserController {
             if (!listOfAllUsers || listOfAllUsers.length == 0) {
                 return res.send({status: STATUS_FAILED, message: "No users found!"});
             }
-            res.send({status: STATUS_SUCCESS, message: "All users fetched successfully!", data: listOfAllUsers});
+            res.status(200).send({ status_code: 200, status: STATUS_SUCCESS, message: "All users fetched successfully!", data: listOfAllUsers});
         } catch (error) {
             console.log(error);
-            res.status(400).send({ status: STATUS_FAILED, message: `Something went wrong! ${error}`});
+            res.status(400).send({ status_code: 400, status: STATUS_FAILED, message: `Something went wrong! ${error}`});
         }
     }
 
@@ -36,11 +36,11 @@ class UserController {
         try {
           const existingUser = await User.findOne({email: email})
           if (existingUser) {
-            return res.status(400).json({ status: STATUS_FAILED, message: "Email already exists!" });
+            return res.status(400).json({ status_code: 400, status: STATUS_FAILED, message: "Email already exists!" });
           }
 
           if (!name || !email || !password) {
-            return res.send({status: STATUS_FAILED, message: "All fields are required!"});
+            return res.status(400).send({ status_code: 400, status: STATUS_FAILED, message: "All fields are required!"});
           }
 
           const salt = await bcrypt.genSalt(BCRYPT_SALT)
@@ -58,11 +58,11 @@ class UserController {
             await doc.save()
             const saved_user = await User.findOne({email: email})
             const token = jwt.sign({userID: saved_user._id}, process.env.JWT_SECRET_KEY, {expiresIn: TOKEN_EXPIRY})
-            res.send({status: STATUS_SUCCESS, message: "User registered successfully!", "token": token});
+            res.status(200).send({ status_code: 200, status: STATUS_SUCCESS, message: "User registered successfully!", "token": token});
 
         } catch (error) {
           console.log(error);
-          res.send({ status: STATUS_FAILED, message: `Something went wrong! ${error}`});
+          res.status(400).send({ status_code: 400, status: STATUS_FAILED, message: `Something went wrong! ${error}`});
         }  
     }
 
@@ -71,25 +71,25 @@ class UserController {
         try {
           const { email, password } = req.body;
           if (!email || !password) {
-            return res.send({status: STATUS_FAILED, message: "All fields are required!"});
+            return res.status(400).send({ status_code: 400, status: STATUS_FAILED, message: "All fields are required!"});
           }
 
           const user = await User.findOne({ email: email });
           if (!user) {
-            return res.status(404).send({status: STATUS_FAILED, message: "You're not a registered user!"});
+            return res.status(404).send({ status_code: 404, status: STATUS_FAILED, message: "You're not a registered user!"});
           }
 
           const isMatch = await bcrypt.compare(password, user.password);
           if (!isMatch) {
-            return res.send({status: STATUS_FAILED, message: "Invalid email or password!"});
+            return res.status(400).send({ status_code: 400, status: STATUS_FAILED, message: "Invalid email or password!"});
           }
 
           const token = jwt.sign({ userID: user._id }, process.env.JWT_SECRET_KEY, { expiresIn: TOKEN_EXPIRY });
-          res.send({status: STATUS_SUCCESS, message: "User logged in successfully!", token: token});
+          res.status(200).send({ status_code: 200, status: STATUS_SUCCESS, message: "User logged in successfully!", token: token});
             
         } catch (error) {
             console.log(error);
-            res.status(400).send({"status": STATUS_FAILED, message: "Unable to login!"});
+            res.status(400).send({ status_code: 400, status: STATUS_FAILED, message: "Unable to login!"});
         }
     }
 
@@ -98,14 +98,14 @@ class UserController {
       try {
         const userExists = await User.findById(req.params.id);
         if (!userExists) {
-          return res.status(404).send({ status: STATUS_FAILED, message: "User not found!"});
+          return res.status(404).send({ status_code: 404, status: STATUS_FAILED, message: "User not found!"});
         }
 
         await userExists.deleteOne();
-        res.send({ status: STATUS_SUCCESS, message: "User deleted successfully!" })
+        res.status(200).send({ status_code: 200, status: STATUS_SUCCESS, message: "User deleted successfully!" })
       } catch (error) {
         console.log(error);
-        res.status(400).send({ status: STATUS_FAILED, message: error });
+        res.status(400).send({ status_code: 400, status: STATUS_FAILED, message: error });
       }
     }
 
@@ -114,15 +114,15 @@ class UserController {
       try {
         const user = await User.findById(req.params.id);
         if (!user) {
-          return res.status(404).send({ status: STATUS_FAILED, message: "User not found!"});
+          return res.status(404).send({ status_code: 404, status: STATUS_FAILED, message: "User not found!"});
         }
-        res.send({ status: STATUS_SUCCESS, message: "User found successfully!", user: user });
+        res.status(200).send({ status_code: 200, status: STATUS_SUCCESS, message: "User found successfully!", user: user });
       } catch (error) {
         console.log(error);
         if (error.name === 'CastError') {
-          return res.status(400).send({ status: STATUS_FAILED, message: `Invalid ${error.path}: ${error.value}` });
+          return res.status(400).send({ status_code: 400, status: STATUS_FAILED, message: `Invalid ${error.path}: ${error.value}` });
         }
-        res.status(500).send({ status: STATUS_FAILED, message: "Something went wrong!" });
+        res.status(500).send({ status_code: 500, status: STATUS_FAILED, message: "Something went wrong!" });
       }
     }
 
@@ -132,12 +132,12 @@ class UserController {
       try {
         const email = req.body.email;
         if (!email) {
-          return res.status(400).send({ status: STATUS_FAILED, message: "Email is required!" });
+          return res.status(400).send({ status_code: 400, status: STATUS_FAILED, message: "Email is required!" });
         }
 
         const user = await User.findOne({ email: email });
         if (!user) {
-          return res.statud(400).send({ status: STATUS_FAILED, message: "You're not a registered user!"});
+          return res.status(400).send({ status_code: 400, status: STATUS_FAILED, message: "You're not a registered user!"});
         }
 
         let token = await Token.findOne({ userId: user._id });
@@ -153,11 +153,11 @@ class UserController {
           const emailMessage = generatePasswordResetEmail(user.name, link);
 
           await sendEmail(user.email, "Password reset", emailMessage);
-          res.send({ status: STATUS_SUCCESS, message: "Email sent successfully!"})
+          res.status(200).send({ status_code: 200, status: STATUS_SUCCESS, message: "Email sent successfully!"})
 
       } catch (error) {
         console.log(error);
-        res.status(400).send({ status: STATUS_FAILED, message: error });
+        res.status(400).send({ status_code: 400, status: STATUS_FAILED, message: error });
       }
     }
     
@@ -166,12 +166,12 @@ class UserController {
       try {
         const user = await User.findById(req.params.userId);
         if (!user) {
-          return res.status(400).send({ status: STATUS_FAILED, message: "You're not a registered user!"});
+          return res.status(400).send({ status_code: 400, status: STATUS_FAILED, message: "You're not a registered user!"});
         }
 
         const token = await Token.findOne({userId: user._id,token: req.params.token});
         if (!token) {
-          return res.status(400).send({ status: STATUS_FAILED, message: "Invalid link or expired link!"})
+          return res.status(400).send({ status_code: 400, status: STATUS_FAILED, message: "Invalid link or expired link!"})
         }
 
         const salt = await bcrypt.genSalt(BCRYPT_SALT)
@@ -180,11 +180,11 @@ class UserController {
 
         await user.save();
         await token.deleteOne();
-        res.send({ status: STATUS_SUCCESS, message: "Password changed successfully!" })
+        res.status(200).send({ status_code: 200, status: STATUS_SUCCESS, message: "Password changed successfully!" })
 
       } catch (error) {
         console.log(error);
-        res.status(400).send({ status: STATUS_FAILED, message: error });
+        res.status(400).send({ status_code: 400, status: STATUS_FAILED, message: error });
       }
     }
 
