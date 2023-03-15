@@ -27,10 +27,10 @@ class attendanceController {
             const listOfAllAttendees = await Attendance.find(filter).sort(sort);
             if (!listOfAllAttendees || listOfAllAttendees.length == 0) return res.send({status: STATUS_FAILED, message: "No attendees found!"});
             
-            res.send({status: STATUS_SUCCESS, message: "All attendees fetched successfully!", data: listOfAllAttendees});
+            res.status(200).send({attendanceList: listOfAllAttendees});
         } catch (error) {
             console.log(error);
-            res.status(400).send({ status: STATUS_FAILED, message: `Something went wrong! ${error}`});
+            res.status(400).send(error);
         }
     }
 
