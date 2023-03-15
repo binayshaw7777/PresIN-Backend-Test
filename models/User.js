@@ -25,8 +25,8 @@ const userSchema = new mongoose.Schema({
     required: [true, "Please enter a role"],
   },
   createdAt: {
-    type: Date,
-    default: Date.now(),
+    type: String,
+    required: true
   },
   embeddingsData: {
     type: String,
