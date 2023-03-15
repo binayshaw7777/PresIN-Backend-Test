@@ -25,12 +25,12 @@ class attendanceController {
             });
 
             const listOfAllAttendees = await Attendance.find(filter).sort(sort);
-            if (!listOfAllAttendees || listOfAllAttendees.length == 0) return res.send({status: STATUS_FAILED, message: "No attendees found!"});
+            if (!listOfAllAttendees || listOfAllAttendees.length == 0) return res.send({status: 400, message: "No attendees found!"});
             
-            res.status(200).send({ status_code: 200, status: STATUS_SUCCESS, message: "All attendees fetched successfully!", attendanceList: listOfAllAttendees});
+            res.status(200).send({ status: 200, message: "All attendees fetched successfully!", attendanceList: listOfAllAttendees});
         } catch (error) {
             console.log(error);
-            res.status(400).send({ status_code: 400, status: STATUS_FAILED, message: `Something went wrong! ${error}`});
+            res.status(400).send({ status: 400, message: `Something went wrong! ${error}`});
         }
     }
 
@@ -39,7 +39,7 @@ class attendanceController {
             const {userID, markedMinute, markedHour, markedDate, markedMonth, markedYear, organization, location} = req.body;
 
             if (!userID || !markedMinute || !markedHour || !markedDate || !markedMonth || !markedYear || !organization || !location) {
-                return res.send({status: STATUS_FAILED, message: "All fields are required!"});
+                return res.status(400).send({status: 400, message: "All fields are required!"});
             }
 
             // Check if attendance already exists for the same date-month-year or not? else create new and update
@@ -50,13 +50,13 @@ class attendanceController {
               );
             
               if (existingAttendance) {
-                return res.status(400).send({ status_code: 400, status: STATUS_FAILED, message: 'Attendance already marked for this date!' });
+                return res.status(400).send({ status: 400, message: 'Attendance already marked for this date!' });
               }
             
-              res.status(200).send({ status_code: 200, status: STATUS_SUCCESS, message: 'Attendance marked successfully!' });
+              res.status(200).send({ status: 200, message: 'Attendance marked successfully!' });
         } catch (error) {
             console.log(error);
-            res.status(400).send({ status_code: 400, status: STATUS_FAILED, message: `Something went wrong! ${error}`});
+            res.status(400).send({ status: 400, message: `Something went wrong! ${error}`});
         }
     }
 
@@ -65,16 +65,16 @@ class attendanceController {
         try {
             const attendanceIsPresent = await Attendance.findById(req.params.id);
             if (!attendanceIsPresent) {
-                return res.status(404).send({status: STATUS_FAILED, message: "Attendance not found!"});
+                return res.status(404).send({ status: 404, message: "Attendance not found!"});
             }
-            res.status(200).send({ status_code: 200, status: STATUS_SUCCESS, message: "Attendance fetched successfully!", data: attendanceIsPresent});
+            res.status(200).send({ status: 200, message: "Attendance fetched successfully!", data: attendanceIsPresent});
 
         } catch (error) {
             console.error(error);
             if (error.name === 'CastError') {
-              return res.status(400).send({ status_code: 400, status: STATUS_FAILED, message: `Invalid ${error.path}: ${error.value}` });
+              return res.status(400).send({ status: 400, message: `Invalid ${error.path}: ${error.value}` });
             }
-            res.status(500).send({ status_code: 500, status: STATUS_FAILED, message: "Something went wrong!" });
+            res.status(500).send({ status: 500,  message: "Something went wrong!" });
           }
     }
 
