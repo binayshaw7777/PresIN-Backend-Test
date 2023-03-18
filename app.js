@@ -8,6 +8,7 @@ const attendanceRoutes = require('./routes/attendanceRoutes.js');
 const organizationRoutes = require('./routes/organizationRoutes.js');
 const cloudinaryRoutes = require('./routes/cloudinaryRoutes.js');
 
+
 app.get('/', (req, res) => {
     res.send("Homepage");
 })
