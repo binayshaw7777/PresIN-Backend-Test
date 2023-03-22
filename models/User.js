@@ -1,20 +1,24 @@
 const mongoose = require("mongoose");
-const Joi = require("@hapi/joi");
+
 
 const userSchema = new mongoose.Schema({
   name: {
     type: String,
-    required: [true, "Please enter a name"],
+    required: true
   },
   email: {
     type: String,
-    required: [true, "Please enter an email"],
+    required: true,
     unique: true,
   },
   password: {
     type: String,
-    required: [true, "Please enter a password"],
-    minlength: [8, "Minimum password length is 6 characters"],
+    required: true,
+    minlength: 8
+  },
+  phone: {
+    type: String,
+    required: true
   },
   isAdmin: {
     type: Boolean,
@@ -22,37 +26,26 @@ const userSchema = new mongoose.Schema({
   },
   role: {
     type: String,
-    required: [true, "Please enter a role"],
+    required: true
+  },
+  organization: {
+    type: String,
+    required: true
   },
   createdAt: {
     type: String,
     required: true
   },
-  embeddingsData: {
+  faceEmbeddings: {
     type: String,
     required: true,
   },
+  profileAvatar: {
+    type: String,
+    default: ""
+  }
 });
 
-// const joiUserSchema = Joi.object({
-//   name: Joi.string().required(),
-//   email: Joi.string().email().required(),
-//   password: Joi.string().min(8).required(),
-//   isAdmin: Joi.boolean().default(false),
-//   role: Joi.string().required(),
-//   createdAt: Joi.date().default(Date.now()),
-//   embeddingsData: Joi.string().required(),
-// });
-
-// Define a validate function to validate user data using Joi schema
-// function validateUser(user) {
-//     return joiUserSchema.validate(user);
-// }
 
 const User = mongoose.model('User', userSchema);
 module.exports = User;
-
-// module.exports = {
-//     User,
-//     validateUser
-// };

@@ -12,6 +12,9 @@ const organizationSchema = new mongoose.Schema({
   organizationEmail: {
     type: String,
   },
+  organizationWebsite: {
+    type: String,
+  }
 });
 
 const Organization = mongoose.model("Organization", organizationSchema);

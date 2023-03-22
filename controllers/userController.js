@@ -31,7 +31,7 @@ class UserController {
 
 
     static userRegistration = async (req, res) => {
-        const {name, email, password, isAdmin, role, createdAt, embeddingsData} = req.body;
+        const {name, email, password, phone, isAdmin, role, organization, createdAt, faceEmbeddings, profileAvatar} = req.body;
 
         try {
           const existingUser = await User.findOne({email: email})
@@ -39,7 +39,7 @@ class UserController {
             return res.status(400).json({ status: 400, message: "Email already exists!" });
           }
 
-          if (!name || !email || !password) {
+          if (!name || !email || !password || !phone || !role || !organization || !createdAt || !faceEmbeddings) {
             return res.status(400).send({ status: 400, message: "All fields are required!"});
           }
 
@@ -49,10 +49,13 @@ class UserController {
                 name,
                 email,
                 password: hashedPassword,
+                phone,
                 isAdmin,
                 role,
+                organization,
                 createdAt,
-                embeddingsData
+                faceEmbeddings,
+                profileAvatar
             })
 
             await doc.save()

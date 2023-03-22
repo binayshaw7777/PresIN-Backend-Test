@@ -23,7 +23,7 @@ class organizationController {
 
     static addOrganization = async (req, res) => {
         try {
-            const { organizationName, organizationLocation, organizationEmail } = req.body;
+            const { organizationName, organizationLocation, organizationEmail, organizationWebsite } = req.body;
             if (!organizationName || !organizationLocation) {
               return res.status(400).send({ status: 400, message: "All fields are required!"});
             }
@@ -34,7 +34,7 @@ class organizationController {
             }
 
             const organization = new Organization({
-                organizationName, organizationLocation, organizationEmail
+                organizationName, organizationLocation, organizationEmail, organizationWebsite
             });
 
             await organization.save();
