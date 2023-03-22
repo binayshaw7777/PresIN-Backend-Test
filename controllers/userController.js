@@ -74,17 +74,17 @@ class UserController {
         try {
           const { email, password } = req.body;
           if (!email || !password) {
-            return res.status(400).send({ status: 400, message: "All fields are required!"});
+            return res.status(400).send({ message: "All fields are required!"});
           }
 
           const user = await User.findOne({ email: email });
           if (!user) {
-            return res.status(404).send({ status: 404, message: "You're not a registered user!"});
+            return res.status(404).send({ message: "You're not a registered user!"});
           }
 
           const isMatch = await bcrypt.compare(password, user.password);
           if (!isMatch) {
-            return res.status(400).send({ status: 400, message: "Invalid email or password!"});
+            return res.status(400).json({ message: "Invalid email or password!"});
           }
 
           const token = jwt.sign({ userID: user._id }, process.env.JWT_SECRET_KEY, { expiresIn: TOKEN_EXPIRY });
@@ -92,7 +92,7 @@ class UserController {
             
         } catch (error) {
             console.log(error);
-            res.status(400).send({ status: 400, message: "Unable to login!"});
+            res.status(400).json({ message: "Unable to login!"});
         }
     }
 

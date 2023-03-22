@@ -1,7 +1,5 @@
 const Organization = require("../models/Organization.js");
 
-const STATUS_SUCCESS = "success";
-const STATUS_FAILED = "failed";
 
 class organizationController {
 
