@@ -148,12 +148,13 @@ class UserController {
               }).save();
           }
 
-          const accessToken = `${user._id}/${token.token}`;
-          console.log(`accessToken: ${accessToken}`);
+          // const accessToken = `${user._id}/${token.token}`;
+          const accessToken = `${token.token}`;
+          // console.log(`accessToken: ${accessToken}`);
           const emailMessage = generatePasswordResetOTPEmail(user.name, otp);
 
           await sendEmail(user.email, "Password reset", emailMessage);
-          res.status(200).send({ message: "Email sent successfully!", accessToken: accessToken})
+          res.status(200).send({ message: "Email sent successfully!", accessToken: token.token, userID: user._id})
 
       } catch (error) {
         console.log(error);
