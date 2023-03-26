@@ -6,7 +6,7 @@ const PORT = process.env.PORT || 3000;
 const userRoutes = require('./routes/userRoutes.js');
 const attendanceRoutes = require('./routes/attendanceRoutes.js');
 const organizationRoutes = require('./routes/organizationRoutes.js');
-
+const roleRoutes = require('./routes/roleRoutes.js');
 
 app.get('/', (req, res) => {
     res.send("Homepage");
@@ -17,6 +17,7 @@ app.use(express.json());
 app.use('/api/users', userRoutes);
 app.use('/api/attendance', attendanceRoutes);
 app.use('/api/organization', organizationRoutes);
+app.use('/api/roles', roleRoutes);
 
 
 const start = async () => {

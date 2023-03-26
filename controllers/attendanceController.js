@@ -1,7 +1,5 @@
 const Attendance = require("../models/Attendance.js");
 
-const STATUS_SUCCESS = "success";
-const STATUS_FAILED = "failed";
 const SORT_BY = "sortBy";
 const SORT_ORDER_DESC = "desc";
 
