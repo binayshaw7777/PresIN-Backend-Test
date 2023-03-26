@@ -1,5 +1,5 @@
 const Role = require('../models/Role.js');
-const StringUtils = require('../utils/stringUtils.js');
+const StringUtils = require('../utils/StringUtils.js');
 require('dotenv').config();
 
 class roleController {
