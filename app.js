@@ -14,6 +14,7 @@ app.get('/', (req, res) => {
 
 app.use(express.json());
 
+//All Routes
 app.use('/api/users', userRoutes);
 app.use('/api/attendance', attendanceRoutes);
 app.use('/api/organization', organizationRoutes);
